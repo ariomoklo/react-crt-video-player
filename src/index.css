@@ -1,0 +1,31 @@
+:root {
+  --font: "Chivo Mono", ui-monospace, Consolas, monospace;
+  --room: #0d0b09;
+  --osd: #d5e6ff;
+  --osd-bg: #071426;
+  color-scheme: dark;
+  font-family: var(--font);
+  background: var(--room);
+  color: #e6d9c3;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--room);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

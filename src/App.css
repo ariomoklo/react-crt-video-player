@@ -1,0 +1,253 @@
+.stage {
+  position: fixed;
+  inset: 0;
+  /* Gestures drive the camera, not page scroll or browser zoom. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Mirrors the WebGL camera so the video lands exactly on the glass. */
+.css3d-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden; /* shown after the first transform is applied */
+}
+
+.css3d-camera {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.css3d-object {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 480px;
+  /* Fills the square corners behind the tube's rounded glass. */
+  background: #000;
+}
+
+.key-hint {
+  position: absolute;
+  left: 20px;
+  bottom: 16px;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #e6d9c3;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.hint-touch {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hint-keys {
+    display: none;
+  }
+
+  .hint-touch {
+    display: inline;
+  }
+}
+
+/* Small-screen message */
+.small-screen {
+  box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 28px;
+  max-width: 36ch;
+  margin: 0 auto;
+}
+
+.small-screen h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #ffd9a8;
+}
+
+.small-screen p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.small-screen .small-screen-tag {
+  align-self: flex-start;
+  padding: 2px 8px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--osd-bg);
+  background: var(--osd);
+}
+
+/* CRT glass: rendered inside the 3D scene by drei's <Html transform> */
+.crt {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  overflow: hidden;
+  border-radius: 7% / 9%;
+  background: #040504;
+  font-family: var(--font);
+  color: var(--osd);
+}
+
+.crt-pic {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  transform-origin: center;
+}
+
+.crt[data-on="true"] .crt-pic {
+  animation: crt-on 0.45s ease-out;
+}
+
+.crt[data-on="false"] .crt-pic {
+  animation: crt-off 0.4s ease-in forwards;
+}
+
+@keyframes crt-on {
+  from {
+    transform: scale(0, 0.004);
+    filter: brightness(5);
+  }
+  35% {
+    transform: scale(1, 0.004);
+    filter: brightness(5);
+  }
+  to {
+    transform: scale(1, 1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes crt-off {
+  from {
+    transform: scale(1, 1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1, 0.004);
+    filter: brightness(5);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0, 0.004);
+    filter: brightness(5);
+    opacity: 0;
+  }
+}
+
+.crt video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* Scanlines, vignette and glare */
+.crt-glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 32%),
+    radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.55) 100%),
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.24) 0 1px, transparent 1px 3px);
+}
+
+.crt-idle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--osd-bg);
+}
+
+.crt-bars {
+  display: flex;
+  flex: 0 0 62%;
+}
+
+.crt-bars span {
+  flex: 1;
+}
+
+.crt-idle-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.crt-idle-title {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 8px rgba(120, 170, 255, 0.8),
+    2px 2px 0 #000;
+}
+
+.crt-idle-hint {
+  margin: 0;
+  min-height: 1em;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+
+.crt-osd {
+  position: absolute;
+  top: 9%;
+  left: 10%;
+  right: 10%;
+  margin: 0;
+  overflow: hidden;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-shadow:
+    0 0 8px rgba(120, 170, 255, 0.8),
+    2px 2px 0 #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt[data-on="true"] .crt-pic,
+  .crt[data-on="false"] .crt-pic {
+    animation: none;
+  }
+
+  .crt[data-on="false"] .crt-pic {
+    opacity: 0;
+  }
+}
